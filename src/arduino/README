@@ -2,8 +2,8 @@ The microcontroller part of Cyberklo.
 
 Everything (my code at least) is licensed under GPL3. Have fun!
 
-I use a WiShield 1.0 to network communications. Sadly they
-aren't produced anymore - but I got 2 of them and they are awesome.
+I use a WiShield 1.0 for network communications. Sadly they
+aren't produced anymore.
 
 You can get the Wishield library from:
 	https://github.com/asynclabs/WiShield
