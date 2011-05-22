@@ -1,0 +1,7 @@
+This is the cyberklo demon. It will gather data from sensors
+over UDP and process it. 
+
+Well, it will listen for a msg on a port and spam IRC with
+"LOL THE TOILET WAS FLUSHED!".
+
+Computer Science - making the world a better place for humankind!
