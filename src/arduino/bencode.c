@@ -11,6 +11,10 @@
  * 	are not part of the bencoding spec! I need them to transmit fuzzy values 
  * 	whose accuracy isn't critical. If you use this for any bencoding stream that 
  * 	needs to be	hashed you will fail!
+ *
+ *  Note: The dictionary creation does not conform to the protocol specs. Keys
+ *  are not sorted lexically!
+ *
  **/
 
 #include <stdio.h>
