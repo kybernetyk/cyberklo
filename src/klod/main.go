@@ -26,13 +26,20 @@ func main() {
 			}
 
 			dict := o.(map[string]interface{})
-			name := dict["name"]
-			data := dict["data"].(map[string]interface{})
+			name := dict["name"].(string)
+			req := dict["req"].(string)
 
-			str = fmt.Sprintf("[Sensor: %s State: %d]",
-				name.(string),
-				data["state"].(int64))
+			if req == "data" {
+				data := dict["data"].(map[string]interface{})
 
+				str = fmt.Sprintf("[Sensor: %s State: %d]",
+					name,
+					data["state"].(int64))
+			} else {
+				str = fmt.Sprintf("[Sensor: %s Req: %s]",
+					name,
+					req)
+			}
 			//propagate to IRC
 			line := "PRIVMSG #polska :" + str
 			c.Send(line)

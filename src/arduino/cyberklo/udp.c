@@ -40,7 +40,7 @@ void  handle_connection(void) {
   benc_dict_kv_i(&dict,"version",1);
   benc_dict_kv_s(&dict,"name", "klotrigger");
   benc_dict_kv_s(&dict,"type", "switch");
-  benc_dict_kv_s(&dict,"payload", "register");
+  benc_dict_kv_s(&dict,"req", "register");
   benc_dict_end(&dict);
   sprint(dict.buf);
    
@@ -63,6 +63,7 @@ void  handle_connection(void) {
     benc_dict_kv_i(&dict,"version",1);
     benc_dict_kv_s(&dict,"name", "klotrigger");
     benc_dict_kv_s(&dict,"type", "switch");
+    benc_dict_kv_s(&dict,"req", "data");
     benc_dict_kv(&dict,"data", &payload);
     benc_dict_end(&dict);
     sprint(dict.buf);
