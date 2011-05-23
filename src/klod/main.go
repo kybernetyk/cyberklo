@@ -6,11 +6,14 @@ import (
 )
 
 func main() {
+	fmt.Println("Starting ...")
 	c := irc.New()
 	c.Tls = true
-	c.Nick = "cyberklo"
-	c.Channels = append(c.Channels, "#fm") 
+	c.Nick = "karkowka"
+	c.Channels = append(c.Channels, "#polska")
 	c.Connect("irc.hackint.eu")
+
+	go udpServe()
 
 	for {
 		select {

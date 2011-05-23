@@ -20,13 +20,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//#include <memory.h>
+#include "benc.h"
 
+#if 0
 struct benc_t 
 {
 	char *buf;		//the otuput buffer
 	size_t len;					
 	size_t cap;
 };
+#endif
 
 //creates a new builder and allocates memory
 struct benc_t benc_new(size_t cap) 
@@ -78,7 +82,10 @@ void benc_int(struct benc_t *b, int i)
 void benc_str(struct benc_t *b, const char *s)
 {
 	char *p = b->buf + b->len;
-	int n = sprintf(p, "%lu:%s", strlen(s), s);
+        
+        //'%zu' isn't supported so we have to cast size_t to long on the avr
+        int n = sprintf(p, "%lu:%s", (unsigned long)strlen(s), s);
+  
 	b->len += n;
 }
 

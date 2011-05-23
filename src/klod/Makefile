@@ -5,6 +5,7 @@ DEPS=\
 
 TARG=cyberklo
 GOFILES=\
+				udp.go\
 				main.go
 
 include $(GOROOT)/src/Make.cmd

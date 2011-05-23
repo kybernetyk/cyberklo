@@ -7,6 +7,7 @@
 #include <string.h>
 #include "udpapp.h"
 #include "config.h"
+#include "benc.h"
 
 extern int trigger;    //1 if triggered, 0 if not
 extern unsigned long last_tick_count;
@@ -33,16 +34,40 @@ void udpapp_init(void) {
 void  handle_connection(void) {
   //send this 2 times beaucse the first packets get lost oO
   if (s.state < 2 ) {
-    char d[] = "switch sensor online\n";
-    uip_send(d, strlen(d));
-    s.state++;
+  char d[256];
+  struct benc_t dict = benc_new_mem(d, 255);
+  benc_dict_start(&dict);
+  benc_dict_kv_i(&dict,"version",1);
+  benc_dict_kv_s(&dict,"name", "klotrigger");
+  benc_dict_kv_s(&dict,"type", "switch");
+  benc_dict_kv_s(&dict,"payload", "register");
+  benc_dict_end(&dict);
+  sprint(dict.buf);
+   
+  uip_send(dict.buf, strlen(dict.buf));
+  s.state++;
     return;
   } 
   
   if (trigger == 1) {
-    char data[32];
-    sprintf(data,"%i, %lu\n", s.state, last_tick_count);
-    uip_send(data, strlen(data));
+    char d[256];
+    char e[32];
+    
+    struct benc_t payload = benc_new_mem(e,32);
+    benc_dict_start(&payload);
+    benc_dict_kv_i(&payload, "state", 1);
+    benc_dict_end(&payload);
+
+    struct benc_t dict = benc_new_mem(d, 256);
+    benc_dict_start(&dict);
+    benc_dict_kv_i(&dict,"version",1);
+    benc_dict_kv_s(&dict,"name", "klotrigger");
+    benc_dict_kv_s(&dict,"type", "switch");
+    benc_dict_kv(&dict,"data", &payload);
+    benc_dict_end(&dict);
+    sprint(dict.buf);
+    
+    uip_send(dict.buf, strlen(dict.buf));
     trigger=0;
   }
 }
