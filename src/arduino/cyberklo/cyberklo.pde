@@ -91,3 +91,9 @@ void loop()
 		Serial.println(d);
 	}
 }
+
+extern "C" {
+  void sprint(void *p) {
+    Serial.println((const char*)p);
+  }
+}

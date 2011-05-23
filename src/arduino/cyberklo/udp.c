@@ -13,6 +13,9 @@ extern unsigned long last_tick_count;
 
 static struct udpapp_state s;
 
+
+void sprint(const char *format, ...);
+
 //configure our master server here
 unsigned char master_ip[] = {10,0,1,2};
 unsigned short master_port = 1234;
@@ -24,6 +27,7 @@ struct uip_udp_conn *conn = NULL;
 void udpapp_init(void) {
   s.state = 0;
   conn = uip_udp_new(master_ip, htons(master_port));
+  sprint("udp shit on!\n");
 }
 
 void  handle_connection(void) {
@@ -43,13 +47,25 @@ void  handle_connection(void) {
   }
 }
 
+void handle_data(void) {
+    //PRINTF_SERIAL("data: %s\n", uip_appdata); 
+    sprint(uip_appdata);
+}
+
 void udpapp_appcall(void) {
-  if (uip_poll() || uip_rexmit() || uip_newdata()) {
+  if (uip_poll() || uip_rexmit()) {
     handle_connection();
+  }
+  if (uip_newdata()) {
+    handle_data(); 
   }
   if (uip_closed() || uip_aborted() || uip_timedout()) {
    uip_udp_remove(conn);
    conn = uip_udp_new(master_ip, htons(master_port));
+   if (conn) {
+     uip_udp_bind(conn, HTONS(1234));
+  }
+
   }
 }
 
