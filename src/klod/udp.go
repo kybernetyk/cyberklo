@@ -5,6 +5,10 @@ import (
 	"net"
 )
 
+func propagate(s string) {
+	to_world_chan <- s
+}
+
 func udpServe() {
 	b := make([]byte, 1000)
 	for {
@@ -18,6 +22,7 @@ func udpServe() {
 
 		i, addr, _ := conn.ReadFrom(b)
 		s := string(b[0:i])
+		go propagate(s)
 		fmt.Printf("%#v: %s", addr, s)
 		conn.WriteTo([]byte("K THX BRO!"), addr)
 		conn.Close()

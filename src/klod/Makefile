@@ -1,10 +1,13 @@
 include $(GOROOT)/src/Make.inc
 
 DEPS=\
-		 irc
+		 irc\
+		 bencode
+
 
 TARG=cyberklo
 GOFILES=\
+				channels.go\
 				udp.go\
 				main.go
 
