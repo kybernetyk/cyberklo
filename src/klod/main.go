@@ -2,12 +2,13 @@ package main
 
 import (
 	"irc"
-	"fmt"
+	"log"
 	"bencode"
+	"fmt"
 )
 
 func main() {
-	fmt.Println("Starting ...")
+	log.Println("Starting ...")
 	c := irc.New()
 	c.Tls = true
 	c.Nick = "karkowka"
@@ -22,7 +23,7 @@ func main() {
 			dec := bencode.NewDecoder([]byte(str))
 			o, err := dec.Decode()
 			if err != nil {
-				fmt.Println(err.String())
+				log.Println("bencoding decode error: " + err.String())
 			}
 
 			dict := o.(map[string]interface{})

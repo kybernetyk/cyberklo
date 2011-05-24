@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"net"
+	"log"
 )
 
 func propagate(s string) {
@@ -23,7 +23,7 @@ func udpServe() {
 		i, addr, _ := conn.ReadFrom(b)
 		s := string(b[0:i])
 		go propagate(s)
-		fmt.Printf("%#v: %s", addr, s)
+		log.Printf("%#v: %s", addr, s)
 		conn.WriteTo([]byte("K THX BRO!"), addr)
 		conn.Close()
 	}
