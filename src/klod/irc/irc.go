@@ -8,7 +8,7 @@ import (
 	"net"
 	"strings"
 	"bufio"
-	"fmt"
+	"log"
 )
 
 
@@ -89,10 +89,11 @@ func (conn *Conn) sender() {
 	for {
 		select {
 		case line := <-conn.out:
-			fmt.Println("sending: " + line)
+			log.Println("sending: " + line)
 			_, err := conn.io.WriteString(line + "\r\n")
 			if err != nil {
-				panic("sender() died!")
+				log.Println("IRC sender error: " + err.String())
+				continue
 			}
 			conn.io.Flush()
 		}
@@ -104,7 +105,8 @@ func (conn *Conn) receiver() {
 	for {
 		s, err := conn.io.ReadString('\n')
 		if err != nil {
-			panic("receiver error!")
+			log.Print("Got IRC receive error: " + err.String())
+			continue
 		}
 		s = strings.Trim(s, "\r\n")
 		conn.in <- s
@@ -116,7 +118,7 @@ func (conn *Conn) dispatcher() {
 	for {
 		select {
 		case line := <-conn.in:
-			fmt.Println(line)
+			log.Println("Dispatching line: " + line)	
 			conn.dispatch(line)
 		}
 	}
