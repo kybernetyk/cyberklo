@@ -5,10 +5,9 @@
 #include <stdlib.h>
 
 
-struct benc_t 
-{
+struct benc_t {
 	char *buf;		//the otuput buffer
-	size_t len;					
+	size_t len;
 	size_t cap;
 };
 

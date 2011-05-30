@@ -1,5 +1,5 @@
 /*
- * bencode.c 
+ * bencode.c
  * 	(c) 2011, Leon Szpilewski, http://jsz.github.com
  * 	LICENSE: GPL3
  *
@@ -8,8 +8,8 @@
  * 	memory! There is no bounds checking done.
  *
  * 	Don't use float encoding if you try to do something with torrents. Floats
- * 	are not part of the bencoding spec! I need them to transmit fuzzy values 
- * 	whose accuracy isn't critical. If you use this for any bencoding stream that 
+ * 	are not part of the bencoding spec! I need them to transmit fuzzy values
+ * 	whose accuracy isn't critical. If you use this for any bencoding stream that
  * 	needs to be	hashed you will fail!
  *
  *  Note: The dictionary creation does not conform to the protocol specs. Keys
@@ -24,17 +24,15 @@
 #include "benc.h"
 
 #if 0
-struct benc_t 
-{
+struct benc_t {
 	char *buf;		//the otuput buffer
-	size_t len;					
+	size_t len;
 	size_t cap;
 };
 #endif
 
 //creates a new builder and allocates memory
-struct benc_t benc_new(size_t cap) 
-{
+struct benc_t benc_new(size_t cap) {
 	struct benc_t sb;
 	sb.buf = malloc(cap);
 	memset(sb.buf, 0x00, cap);
@@ -45,8 +43,7 @@ struct benc_t benc_new(size_t cap)
 
 //creates a new builder but uses memory @ buf.
 //memory will be initialized with 0x00
-struct benc_t benc_new_mem(char *buf, size_t len)
-{
+struct benc_t benc_new_mem(char *buf, size_t len) {
 	struct benc_t sb;
 	sb.buf = buf;
 	memset(sb.buf, 0x00, len);
@@ -63,7 +60,7 @@ void benc_reset(struct benc_t *b)
 }
 
 //frees memory allocated by builder_new
-void benc_free(struct benc_t *b) 
+void benc_free(struct benc_t *b)
 {
 	free(b->buf);
 	b->buf = 0;
@@ -82,10 +79,10 @@ void benc_int(struct benc_t *b, int i)
 void benc_str(struct benc_t *b, const char *s)
 {
 	char *p = b->buf + b->len;
-        
-        //'%zu' isn't supported so we have to cast size_t to long on the avr
-        int n = sprintf(p, "%lu:%s", (unsigned long)strlen(s), s);
-  
+
+	//'%zu' isn't supported so we have to cast size_t to long on the avr
+	int n = sprintf(p, "%lu:%s", (unsigned long)strlen(s), s);
+
 	b->len += n;
 }
 
@@ -188,7 +185,7 @@ int main(int argc, char **argv)
 
 	benc_float(&b, 44.245);
 	printf("3. 23,'ficken',44.245: %s\n", b.buf);
-	
+
 	//now a dict
 	benc_reset(&b);
 	benc_dict_start(&b);
@@ -208,18 +205,18 @@ int main(int argc, char **argv)
 	//now a list
 	struct benc_t d = benc_new_mem(buf3, chunk_len);
 	benc_list_start(&d);
-	
-		struct benc_t tmp = benc_new_mem(buf4, chunk_len);
-		benc_int(&tmp, 44);
-		benc_list_add(&d, &tmp);
-	
-		benc_reset(&tmp);
-		benc_float(&tmp, 23.5);
-		benc_list_add(&d, &tmp);
 
-		benc_reset(&tmp);
-		benc_str(&tmp, "lol");
-		benc_list_add(&d, &tmp);
+	struct benc_t tmp = benc_new_mem(buf4, chunk_len);
+	benc_int(&tmp, 44);
+	benc_list_add(&d, &tmp);
+
+	benc_reset(&tmp);
+	benc_float(&tmp, 23.5);
+	benc_list_add(&d, &tmp);
+
+	benc_reset(&tmp);
+	benc_str(&tmp, "lol");
+	benc_list_add(&d, &tmp);
 
 	//let's add the dict to the list
 	benc_list_add(&d, &c);
